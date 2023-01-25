@@ -17,7 +17,11 @@ return new class extends Migration
             $table->id();
             $table->foreignId('vendor_id')->constrained();
             $table->string('name');
+            $table->string('slug')->default('main');
             $table->timestamps();
+
+            $table->unique(['vendor_id', 'slug']);
+            $table->index('vendor_id', 'branches_vendor_id_foreign');
         });
     }
 
