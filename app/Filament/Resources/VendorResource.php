@@ -3,21 +3,23 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\VendorResource\Pages;
-use App\Filament\Resources\VendorResource\RelationManagers;
 use App\Models\Vendor;
 use Filament\Forms;
-use Filament\Resources\Form;
+use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Resources\Table;
 use Filament\Tables;
+use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class VendorResource extends Resource
 {
     protected static ?string $model = Vendor::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-office-building';
+    protected static ?string $navigationIcon = 'heroicon-o-building-storefront';
+
+    protected static ?string $recordTitleAttribute = 'subdomain';
+
+    protected static ?int $navigationSort = 2;
 
     public static function form(Form $form): Form
     {
@@ -36,7 +38,7 @@ class VendorResource extends Resource
                         Forms\Components\TextInput::make('name')->required(),
                         Forms\Components\TextInput::make('phone')->required(),
                         Forms\Components\TextInput::make('coords')
-                        ->required(),
+                            ->required(),
                     ])
                     ->columns(3),
                 Forms\Components\Repeater::make('socials')
@@ -48,17 +50,16 @@ class VendorResource extends Resource
                                 'tg' => 'Telegram',
                             ])
                             ->required(),
-                        Forms\Components\TextInput::make('url')->required()
+                        Forms\Components\TextInput::make('url')->required(),
                     ])
                     ->columns(2),
                 Forms\Components\Select::make('languages')
                     ->multiple()
                     ->options([
                         'uz' => 'O\'zbek',
-                        'oz' => 'Ўзбек',
                         'ru' => 'Русский',
                         'en' => 'English',
-                        'tr' => 'Türk'
+                        'tr' => 'Türk',
                     ])
                     ->required(),
             ]);
@@ -86,18 +87,23 @@ class VendorResource extends Resource
             ->actions([
                 Tables\Actions\EditAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\DeleteBulkAction::make(),
+            // ->bulkActions([
+            //     Tables\Actions\BulkActionGroup::make([
+            //         Tables\Actions\DeleteBulkAction::make(),
+            //     ]),
+            // ])
+            ->emptyStateActions([
+                Tables\Actions\CreateAction::make(),
             ]);
     }
-    
+
     public static function getRelations(): array
     {
         return [
             //
         ];
     }
-    
+
     public static function getPages(): array
     {
         return [
@@ -105,5 +111,10 @@ class VendorResource extends Resource
             'create' => Pages\CreateVendor::route('/create'),
             'edit' => Pages\EditVendor::route('/{record}/edit'),
         ];
-    }    
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()->ownedBy(auth()->user());
+    }
 }

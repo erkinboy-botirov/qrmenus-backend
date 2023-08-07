@@ -1,5 +1,6 @@
 {
     "private": true,
+    "minimum-stability": "dev",
     "scripts": {
         "dev": "vite",
         "build": "vite build"

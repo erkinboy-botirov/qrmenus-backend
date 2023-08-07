@@ -30,6 +30,6 @@ Route::get('vendors/{subdomain}', function (Request $request, $subdomain) {
     }
 
     return \App\Models\Vendor::whereSubdomain($subdomain)
-        ->with('branches.categories.products')
+        ->with('branches.categories.products.portions')
         ->first();
 });

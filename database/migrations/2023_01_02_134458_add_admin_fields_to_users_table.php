@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::table('users', function (Blueprint $table) {
             $table->foreignId('vendor_id')->nullable()->constrained();
             $table->foreignId('branch_id')->nullable()->constrained();
-            $table->boolean('is_admin')->default(true);
+            $table->boolean('is_admin')->default(false);
         });
     }
 

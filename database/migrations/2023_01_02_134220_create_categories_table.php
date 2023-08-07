@@ -16,8 +16,11 @@ return new class extends Migration
         Schema::create('categories', function (Blueprint $table) {
             $table->id();
             $table->foreignId('branch_id')->constrained();
-            $table->json('name');
             $table->unsignedSmallInteger('order')->default(1);
+            $table->string('name_ru');
+            $table->string('name_uz')->nullable();
+            $table->string('name_en')->nullable();
+            $table->string('name_tr')->nullable();
             $table->timestamps();
         });
     }

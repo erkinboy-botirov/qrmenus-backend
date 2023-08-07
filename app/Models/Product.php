@@ -11,16 +11,13 @@ class Product extends Model
 
     protected $guarded = [];
 
-    protected $casts = [
-        'name' => 'array',
-        'ingredients' => 'array',
-        'description' => 'array',
-        'portions' => 'array',
-        'is_active' => 'boolean'
-    ];
-
     public function category()
     {
         return $this->belongsTo(Category::class);
+    }
+
+    public function portions()
+    {
+        return $this->hasMany(Portion::class);
     }
 }

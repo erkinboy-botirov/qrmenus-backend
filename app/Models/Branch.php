@@ -9,9 +9,15 @@ class Branch extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'vendor_id'];
+    protected $fillable = [
+        'vendor_id',
+        'name_ru',
+        'name_uz',
+        'name_en',
+        'name_tr',
+    ];
 
-    public function vendor() 
+    public function vendor()
     {
         return $this->belongsTo(Vendor::class);
     }

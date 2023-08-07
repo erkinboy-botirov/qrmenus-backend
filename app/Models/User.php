@@ -22,7 +22,7 @@ class User extends Authenticatable
         'email',
         'password',
         'vendor_id',
-        'branch_id'
+        'branch_id',
     ];
 
     /**
@@ -43,6 +43,8 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'password' => 'hashed',
+        'is_admin' => 'boolean',
     ];
 
     public function vendor()
@@ -55,10 +57,8 @@ class User extends Authenticatable
         return $this->belongsTo(Branch::class);
     }
 
-    // public function setPasswordAttribute($password)
-    // {
-    //     if (!empty($password)) {
-    //         $this->attributes['password'] = bcrypt($password);
-    //     }
-    // }
+    public function canAccessPanel(Panel $panel): bool
+    {
+        return true;
+    }
 }

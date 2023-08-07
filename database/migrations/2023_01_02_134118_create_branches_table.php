@@ -16,12 +16,15 @@ return new class extends Migration
         Schema::create('branches', function (Blueprint $table) {
             $table->id();
             $table->foreignId('vendor_id')->constrained();
-            $table->string('name');
             $table->string('slug')->default('main');
+            $table->string('name_ru');
+            $table->string('name_uz')->nullable();
+            $table->string('name_en')->nullable();
+            $table->string('name_tr')->nullable();
             $table->timestamps();
 
             $table->unique(['vendor_id', 'slug']);
-            $table->index('vendor_id', 'branches_vendor_id_foreign');
+            $table->index('slug');
         });
     }
 

@@ -1,9 +1,9 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Query\Expression;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Query\Expression;
 
 return new class extends Migration
 {
@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('favicon')->nullable();
             $table->json('contacts')->nullable();
             $table->json('socials')->nullable();
-            $table->json('languages')->default(new Expression('(JSON_ARRAY("en", "ru", "uz"))'));
+            $table->json('languages')->default(new Expression('(JSON_ARRAY("ru"))'));
             $table->timestamps();
         });
     }

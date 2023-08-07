@@ -16,13 +16,21 @@ return new class extends Migration
         Schema::create('products', function (Blueprint $table) {
             $table->id();
             $table->foreignId('category_id')->constrained();
-            $table->json('name');
-            $table->json('ingredients')->nullable();
-            $table->json('description')->nullable();
-            $table->unsignedInteger('display_price');
-            $table->json('portions');
-            $table->string('image')->nullable();
             $table->boolean('is_active')->default(true);
+            $table->unsignedInteger('display_price');
+            $table->string('image')->nullable();
+            $table->string('name_ru');
+            $table->string('name_uz')->nullable();
+            $table->string('name_en')->nullable();
+            $table->string('name_tr')->nullable();
+            $table->text('ingredients_ru')->nullable();
+            $table->text('ingredients_uz')->nullable();
+            $table->text('ingredients_en')->nullable();
+            $table->text('ingredients_tr')->nullable();
+            $table->text('description_ru')->nullable();
+            $table->text('description_uz')->nullable();
+            $table->text('description_en')->nullable();
+            $table->text('description_tr')->nullable();
             $table->timestamps();
         });
     }
