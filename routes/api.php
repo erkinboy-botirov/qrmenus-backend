@@ -18,18 +18,4 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('vendors/{subdomain}', function (Request $request, $subdomain) {
-    if ($request->has('branch') and $request->filled('branch')) {
-        $vendor = \App\Models\Vendor::whereSubdomain($subdomain)->first();
-        $branch = \App\Models\Branch::with('categories.products')
-            ->whereSlug($request->branch)
-            ->first();
-        $vendor->branch = $branch;
-
-        return $vendor;
-    }
-
-    return \App\Models\Vendor::whereSubdomain($subdomain)
-        ->with('branches.categories.products.portions')
-        ->first();
-});
+Route::get('vendors/{subdomain}', [\App\Http\Controllers\Api\VendorController::class, 'show']);
