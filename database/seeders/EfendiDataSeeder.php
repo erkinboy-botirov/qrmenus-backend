@@ -57,6 +57,7 @@ class EfendiDataSeeder extends Seeder
         ]);
 
         $product = $category->products()->create([
+            'branch_id' => $category->branch_id,
             'name_ru' => 'ВИНЕГРЕТ',
             'name_en' => 'VEGETABLE SALAD',
             'ingredients_ru' => 'СВЕКЛА, КВАШЕННАЯ КАПУСТА, СОЛЕННЫЕ ОГУРЦЫ',

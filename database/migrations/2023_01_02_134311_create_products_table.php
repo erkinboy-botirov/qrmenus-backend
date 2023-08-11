@@ -15,6 +15,7 @@ return new class extends Migration
     {
         Schema::create('products', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('branch_id')->constrained();
             $table->foreignId('category_id')->constrained();
             $table->boolean('is_active')->default(true);
             $table->unsignedInteger('display_price');

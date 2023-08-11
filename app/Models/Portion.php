@@ -18,8 +18,20 @@ class Portion extends Model
         'name_tr',
     ];
 
+    protected $appends = ['name'];
+
     public function product()
     {
         return $this->belongsTo(Product::class);
+    }
+
+    public function getNameAttribute()
+    {
+        return [
+            'ru' => $this->name_ru,
+            'uz' => $this->name_uz,
+            'en' => $this->name_en,
+            'tr' => $this->name_tr,
+        ];
     }
 }

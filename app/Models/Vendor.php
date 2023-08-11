@@ -18,6 +18,20 @@ class Vendor extends Model
         'languages' => 'array',
     ];
 
+    protected static function booted(): void
+    {
+        $user = auth()->user();
+        static::addGlobalScope('tenant', function (Builder $builder) use ($user) {
+            if ($user === null or $user->is_admin) {
+                return; // do not apply to public APIs and admin
+            } elseif ($user->branch_id) {
+                $builder->where('id', $user->branch->vendor_id);
+            } elseif ($user->vendor_id) {
+                $builder->where('id', $user->vendor_id);
+            }
+        });
+    }
+
     public function user()
     {
         return $this->hasMany(User::class);
