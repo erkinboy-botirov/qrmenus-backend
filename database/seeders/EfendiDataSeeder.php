@@ -18,21 +18,23 @@ class EfendiDataSeeder extends Seeder
         $vendor = Vendor::create([
             'name' => 'Efendi',
             'subdomain' => 'efendi',
-            'logo' => 'https://efendi.qrmenus.uz/img/logo.c506012a.svg',
-            'favicon' => 'https://efendi.qrmenus.uz/favicon.ico',
+            'logo' => null,
+            'favicon' => null,
             'contacts' => [
                 [
                     'name' => 'Efendi Restaurant 1',
                     'phone' => '(71) 233-15-02',
-                    'coords' => [41.30246, 69.28775],
+                    'latitude' => '41.30246',
+                    'longitude' => '69.28775',
                 ],
                 [
                     'name' => 'Efendi Restaurant 2',
                     'phone' => '(95) 177-09-93',
-                    'coords' => [41.327882, 69.269219],
+                    'latitude' => '41.327882',
+                    'longitude' => '69.269219',
                 ],
             ],
-            'languages' => ['ru', 'en'],
+            'languages' => ['en', 'ru'],
         ]);
 
         $branch = $vendor->branches()->create([
@@ -50,6 +52,14 @@ class EfendiDataSeeder extends Seeder
             'vendor_id' => $vendor->id,
         ]);
 
+        User::create([
+            'name' => 'Bakhodir Salikhov',
+            'email' => 'b.salikhov@qrmenuz.uz',
+            'email_verified_at' => now(),
+            'password' => 'password',
+            'vendor_id' => $vendor->id,
+        ]);
+
         $category = $branch->categories()->create([
             'name_ru' => 'Салат',
             'name_en' => 'Salad',
@@ -62,7 +72,7 @@ class EfendiDataSeeder extends Seeder
             'name_en' => 'VEGETABLE SALAD',
             'ingredients_ru' => 'СВЕКЛА, КВАШЕННАЯ КАПУСТА, СОЛЕННЫЕ ОГУРЦЫ',
             'ingredients_en' => 'BEETS, SAUERKRAUT PICKLES',
-            'image' => 'https://efendi.qrmenus.uz/images/salat/salat_1.webp',
+            'image' => null,
             'display_price' => 25000,
         ]);
 
