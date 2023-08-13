@@ -3,6 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\VendorResource\Pages;
+use App\Filament\Resources\VendorResource\RelationManagers\BranchesRelationManager;
 use App\Models\Vendor;
 use App\Rules\Contains;
 use Filament\Forms\Components\CheckboxList;
@@ -24,7 +25,7 @@ class VendorResource extends Resource
 {
     protected static ?string $model = Vendor::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-building-storefront';
+    protected static ?string $navigationIcon = 'heroicon-o-building-office';
 
     protected static ?string $recordTitleAttribute = 'subdomain';
 
@@ -100,7 +101,9 @@ class VendorResource extends Resource
 
     public static function getRelations(): array
     {
-        return [];
+        return [
+            BranchesRelationManager::class,
+        ];
     }
 
     public static function getPages(): array

@@ -80,4 +80,9 @@ class Vendor extends Model
     {
         return $this->favicon ? Storage::url($this->favicon) : null;
     }
+
+    public function hasLanguage(string $language): bool
+    {
+        return in_array($language, $this->languages);
+    }
 }

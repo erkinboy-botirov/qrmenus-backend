@@ -34,6 +34,7 @@ class UserResource extends Resource
                     ->searchable()
                     ->default(auth()->user()->vendor_id)
                     ->disabled(auth()->user()->is_not_admin)
+                    ->required()
                     ->live(),
                 Select::make('branch_id')
                     ->helperText('Leave blank to create a vendor owner')

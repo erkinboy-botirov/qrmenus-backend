@@ -13,6 +13,7 @@ class Branch extends Model
     use HasFactory;
 
     protected $fillable = [
+        'slug',
         'vendor_id',
         'name_ru',
         'name_uz',
