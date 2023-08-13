@@ -226,4 +226,6 @@ return [
         'ig' => 'Instagram',
         'tg' => 'Telegram',
     ],
+
+    'admin_ids' => array_map('intval', explode(',', env('ADMIN_IDS'))),
 ];

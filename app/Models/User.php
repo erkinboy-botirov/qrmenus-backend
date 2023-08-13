@@ -81,6 +81,11 @@ class User extends Authenticatable
         return $this->is_admin || $this->vendor_id || $this->branch_id;
     }
 
+    public function getIsAdminAttribute(): bool
+    {
+        return in_array($this->id, config('app.admin_ids'));
+    }
+
     public function getIsNotAdminAttribute(): bool
     {
         return ! $this->is_admin;
@@ -94,5 +99,18 @@ class User extends Authenticatable
     public function getIsBranchOwnerAttribute(): bool
     {
         return (bool) $this->branch_id;
+    }
+
+    public function getRoleAttribute(): string
+    {
+        if ($this->is_admin) {
+            return 'admin';
+        } elseif ($this->branch_id) {
+            return 'branch-owner';
+        } elseif ($this->vendor_id) {
+            return 'vendor-owner';
+        }
+
+        return 'user';
     }
 }

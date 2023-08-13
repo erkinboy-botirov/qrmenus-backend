@@ -8,12 +8,13 @@ use App\Models\User;
 use App\Models\Vendor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
+use Filament\Forms\Get;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Support\Collection;
 
 class UserResource extends Resource
 {
@@ -29,15 +30,22 @@ class UserResource extends Resource
             ->schema([
                 Select::make('vendor_id')
                     ->label('Vendor')
-                    ->options(Vendor::all()->pluck('name', 'id'))
+                    ->options(Vendor::pluck('name', 'id'))
                     ->searchable()
                     ->default(auth()->user()->vendor_id)
-                    ->hidden(auth()->user()->is_not_admin),
+                    ->disabled(auth()->user()->is_not_admin)
+                    ->live(),
                 Select::make('branch_id')
-                    ->helperText('Leave blank to create a vendor user')
+                    ->helperText('Leave blank to create a vendor owner')
                     ->label('Branch')
-                    ->options(Branch::all()->pluck('name_ru', 'id'))
-                    ->searchable()
+                    ->options(function (Get $get): Collection {
+                        $builder = $get('vendor_id')
+                            ? Branch::where('vendor_id', $get('vendor_id'))
+                            : Branch::query();
+
+                        return $builder->pluck('name_ru', 'id');
+                    })
+                    // ->searchable()
                     ->default(auth()->user()->branch_id)
                     ->hidden(auth()->user()->is_branch_owner),
                 TextInput::make('name')
@@ -50,14 +58,11 @@ class UserResource extends Resource
                     ->unique(ignoreRecord: true),
                 TextInput::make('password')
                     ->password()
-                    ->required()
+                    ->required(fn (string $operation): bool => $operation === 'create')
                     ->maxLength(255)
                     ->same('password_confirmation'),
                 TextInput::make('password_confirmation')
-                    ->required(),
-                Toggle::make('is_admin')
-                    ->default(false)
-                    ->hidden(auth()->user()->is_not_admin),
+                    ->required(fn (string $operation): bool => $operation === 'create'),
             ]);
     }
 
