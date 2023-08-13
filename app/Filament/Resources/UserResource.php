@@ -3,11 +3,16 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\UserResource\Pages;
+use App\Models\Branch;
 use App\Models\User;
-use Filament\Forms;
+use App\Models\Vendor;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
 class UserResource extends Resource
@@ -22,21 +27,37 @@ class UserResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('vendor_id')
-                    ->numeric(),
-                Forms\Components\TextInput::make('branch_id')
-                    ->numeric(),
-                Forms\Components\TextInput::make('name')
+                Select::make('vendor_id')
+                    ->label('Vendor')
+                    ->options(Vendor::all()->pluck('name', 'id'))
+                    ->searchable()
+                    ->default(auth()->user()->vendor_id)
+                    ->hidden(auth()->user()->is_not_admin),
+                Select::make('branch_id')
+                    ->helperText('Leave blank to create a vendor user')
+                    ->label('Branch')
+                    ->options(Branch::all()->pluck('name_ru', 'id'))
+                    ->searchable()
+                    ->default(auth()->user()->branch_id)
+                    ->hidden(auth()->user()->is_branch_owner),
+                TextInput::make('name')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\TextInput::make('email')
+                TextInput::make('email')
                     ->email()
                     ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('password')
+                    ->maxLength(255)
+                    ->unique(ignoreRecord: true),
+                TextInput::make('password')
                     ->password()
                     ->required()
-                    ->maxLength(255),
+                    ->maxLength(255)
+                    ->same('password_confirmation'),
+                TextInput::make('password_confirmation')
+                    ->required(),
+                Toggle::make('is_admin')
+                    ->default(false)
+                    ->hidden(auth()->user()->is_not_admin),
             ]);
     }
 
@@ -44,21 +65,21 @@ class UserResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('vendor_id')
-                    ->numeric()
+                TextColumn::make('vendor.name')
+                    ->default('-')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('branch_id')
-                    ->numeric()
+                TextColumn::make('branch.name_ru')
+                    ->default('-')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('name')
+                TextColumn::make('name')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('email')
+                TextColumn::make('email')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
+                TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),

@@ -5,6 +5,8 @@ namespace App\Models;
 use App\Models\Scopes\TenantScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Product extends Model
 {
@@ -19,17 +21,17 @@ class Product extends Model
         static::addGlobalScope(new TenantScope);
     }
 
-    public function category()
+    public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);
     }
 
-    public function portions()
+    public function portions(): HasMany
     {
         return $this->hasMany(Portion::class);
     }
 
-    public function getNameAttribute()
+    public function getNameAttribute(): array
     {
         return [
             'ru' => $this->name_ru,
@@ -39,7 +41,7 @@ class Product extends Model
         ];
     }
 
-    public function getIngredientsAttribute()
+    public function getIngredientsAttribute(): array
     {
         return [
             'ru' => $this->ingredients_ru,
@@ -49,7 +51,7 @@ class Product extends Model
         ];
     }
 
-    public function getDescriptionAttribute()
+    public function getDescriptionAttribute(): array
     {
         return [
             'ru' => $this->description_ru,

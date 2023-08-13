@@ -16,4 +16,13 @@ class EditUser extends EditRecord
             Actions\DeleteAction::make(),
         ];
     }
+
+    protected function mutateFormDataBeforeSave(array $data): array
+    {
+        if (isset($data['branch_id']) && isset($data['vendor_id'])) {
+            $data['vendor_id'] = null;
+        }
+
+        return $data;
+    }
 }

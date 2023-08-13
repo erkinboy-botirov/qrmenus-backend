@@ -15,8 +15,8 @@ class TenantScope implements Scope
     public function apply(Builder $builder, Model $model): void
     {
         $user = Auth::hasUser() ? Auth::user() : null; // do not edit to this: $user = Auth::user()
-        if ($user === null or $user->is_admin) {
-            return; // do not apply to public APIs and admin
+        if ($user === null || $user->is_admin) {
+            // do not apply to public APIs and admin
         } elseif ($user->branch_id) {
             $builder->where('branch_id', $user->branch_id);
         } elseif ($user->vendor_id) {

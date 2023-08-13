@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Portion extends Model
 {
@@ -20,12 +21,12 @@ class Portion extends Model
 
     protected $appends = ['name'];
 
-    public function product()
+    public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class);
     }
 
-    public function getNameAttribute()
+    public function getNameAttribute(): array
     {
         return [
             'ru' => $this->name_ru,

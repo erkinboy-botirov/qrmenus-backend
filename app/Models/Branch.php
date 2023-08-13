@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Branch extends Model
 {
@@ -24,8 +26,8 @@ class Branch extends Model
     {
         $user = auth()->user();
         static::addGlobalScope('tenant', function (Builder $builder) use ($user) {
-            if ($user === null or $user->is_admin) {
-                return; // do not apply to public APIs and admin
+            if ($user === null || $user->is_admin) {
+                // do not apply to public APIs and admin
             } elseif ($user->branch_id) {
                 $builder->where('id', $user->branch_id);
             } elseif ($user->vendor_id) {
@@ -34,27 +36,27 @@ class Branch extends Model
         });
     }
 
-    public function vendor()
+    public function vendor(): BelongsTo
     {
         return $this->belongsTo(Vendor::class);
     }
 
-    public function users()
+    public function users(): HasMany
     {
         return $this->hasMany(User::class);
     }
 
-    public function categories()
+    public function categories(): HasMany
     {
         return $this->hasMany(Category::class);
     }
 
-    public function reviews()
+    public function reviews(): HasMany
     {
         return $this->hasMany(Review::class);
     }
 
-    public function getNameAttribute()
+    public function getNameAttribute(): array
     {
         return [
             'ru' => $this->name_ru,

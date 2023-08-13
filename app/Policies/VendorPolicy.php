@@ -17,7 +17,7 @@ class VendorPolicy
      */
     public function viewAny(User $user)
     {
-        return $user->vendor_id or $user->branch_id;
+        return $user->vendor_id || $user->branch_id;
     }
 
     /**
@@ -27,7 +27,7 @@ class VendorPolicy
      */
     public function view(User $user, Vendor $vendor)
     {
-        return $user->vendor_id === $vendor->id or $user->branch?->vendor_id === $vendor->id;
+        return $user->vendor_id === $vendor->id || $user->branch?->vendor_id === $vendor->id;
     }
 
     /**

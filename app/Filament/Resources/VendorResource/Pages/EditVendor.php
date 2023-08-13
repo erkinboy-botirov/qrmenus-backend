@@ -16,4 +16,11 @@ class EditVendor extends EditRecord
             Actions\DeleteAction::make(),
         ];
     }
+
+    protected function mutateFormDataBeforeSave(array $data): array
+    {
+        sort($data['languages']);
+
+        return $data;
+    }
 }

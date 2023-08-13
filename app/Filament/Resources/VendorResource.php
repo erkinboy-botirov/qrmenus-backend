@@ -4,10 +4,20 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\VendorResource\Pages;
 use App\Models\Vendor;
-use Filament\Forms;
+use App\Rules\Contains;
+use Filament\Forms\Components\CheckboxList;
+use Filament\Forms\Components\Fieldset;
+use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Tabs;
+use Filament\Forms\Components\Tabs\Tab;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Columns\ImageColumn;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
 class VendorResource extends Resource
@@ -22,62 +32,54 @@ class VendorResource extends Resource
 
     public static function form(Form $form): Form
     {
-        return $form
-            ->schema([
-                Forms\Components\TextInput::make('name')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('subdomain')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\FileUpload::make('logo'),
-                Forms\Components\FileUpload::make('favicon'),
-                Forms\Components\Repeater::make('contacts')
-                    ->schema([
-                        Forms\Components\TextInput::make('name')->required(),
-                        Forms\Components\TextInput::make('phone')->required(),
-                        Forms\Components\TextInput::make('coords')
-                            ->required(),
-                    ])
-                    ->columns(3),
-                Forms\Components\Repeater::make('socials')
-                    ->schema([
-                        Forms\Components\Select::make('social')
-                            ->options([
-                                'fb' => 'Facebook',
-                                'ig' => 'Instagram',
-                                'tg' => 'Telegram',
-                            ])
-                            ->required(),
-                        Forms\Components\TextInput::make('url')->required(),
-                    ])
-                    ->columns(2),
-                Forms\Components\Select::make('languages')
-                    ->multiple()
-                    ->options([
-                        'uz' => 'O\'zbek',
-                        'ru' => 'Русский',
-                        'en' => 'English',
-                        'tr' => 'Türk',
-                    ])
-                    ->required(),
-            ]);
+        return $form->schema([
+            Tabs::make('Vendor')->tabs([
+                Tab::make('Main')->schema([
+                    Fieldset::make('Essentials')->schema([
+                        TextInput::make('name')->maxLength(255)->required(),
+                        TextInput::make('subdomain')->maxLength(255)->required()->unique(ignoreRecord: true),
+                        CheckboxList::make('languages')
+                            ->options(config('app.languages'))
+                            ->default(['ru'])
+                            ->columns(2)
+                            ->required()
+                            ->rule(new Contains('ru')),
+                    ])->columnSpan(1)->columns(1),
+                    Fieldset::make('Brand graphics')->schema([
+                        FileUpload::make('logo')->imagePreviewHeight('96'),
+                        FileUpload::make('favicon')->imagePreviewHeight('96'),
+                    ])->columnSpan(1)->columns(1),
+                ])->columns(2),
+                Tab::make('Meta')->schema([
+                    Repeater::make('contacts')->schema([
+                        TextInput::make('name')->required(),
+                        TextInput::make('phone')->required(),
+                        TextInput::make('latitude')->placeholder('41.311081')->required(),
+                        TextInput::make('longitude')->placeholder('69.240562')->required(),
+                    ])->columns(2),
+                    Repeater::make('socials')->schema([
+                        Select::make('social')->options(config('app.socials'))->required(),
+                        TextInput::make('url')->required(),
+                    ])->columns(2),
+                ])->columns(2),
+            ])->columnSpan(2)->persistTabInQueryString(),
+        ]);
     }
 
     public static function table(Table $table): Table
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name'),
-                Tables\Columns\TextColumn::make('subdomain'),
-                Tables\Columns\ImageColumn::make('logo'),
+                TextColumn::make('name'),
+                TextColumn::make('subdomain'),
+                ImageColumn::make('logo'),
                 // Tables\Columns\ImageColumn::make('favicon'),
-                // Tables\Columns\TextColumn::make('contacts'),
-                // Tables\Columns\TextColumn::make('socials'),
-                // Tables\Columns\TextColumn::make('languages'),
-                Tables\Columns\TextColumn::make('created_at')
+                // TextColumn::make('contacts'),
+                // TextColumn::make('socials'),
+                TextColumn::make('languages'),
+                TextColumn::make('created_at')
                     ->dateTime(),
-                Tables\Columns\TextColumn::make('updated_at')
+                TextColumn::make('updated_at')
                     ->dateTime(),
             ])
             ->filters([
@@ -98,9 +100,7 @@ class VendorResource extends Resource
 
     public static function getRelations(): array
     {
-        return [
-            //
-        ];
+        return [];
     }
 
     public static function getPages(): array

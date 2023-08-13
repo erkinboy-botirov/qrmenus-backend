@@ -2,9 +2,10 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Filament\Panel;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -52,8 +53,8 @@ class User extends Authenticatable
     {
         $user = auth()->user();
         static::addGlobalScope('tenant', function (Builder $builder) use ($user) {
-            if ($user === null or $user->is_admin) {
-                return; // do not apply to public APIs and admin
+            if ($user === null || $user->is_admin) {
+                // do not apply to public APIs and admin
             } elseif ($user->branch_id) {
                 $builder->where('id', $user->id);
             } elseif ($user->vendor_id) {
@@ -65,18 +66,33 @@ class User extends Authenticatable
         });
     }
 
-    public function vendor()
+    public function vendor(): BelongsTo
     {
         return $this->belongsTo(Vendor::class);
     }
 
-    public function branch()
+    public function branch(): BelongsTo
     {
         return $this->belongsTo(Branch::class);
     }
 
     public function canAccessPanel(Panel $panel): bool
     {
-        return true;
+        return $this->is_admin || $this->vendor_id || $this->branch_id;
+    }
+
+    public function getIsNotAdminAttribute(): bool
+    {
+        return ! $this->is_admin;
+    }
+
+    public function getIsVendorOwnerAttribute(): bool
+    {
+        return (bool) $this->vendor_id;
+    }
+
+    public function getIsBranchOwnerAttribute(): bool
+    {
+        return (bool) $this->branch_id;
     }
 }

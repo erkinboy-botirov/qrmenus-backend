@@ -11,7 +11,7 @@ class UserPolicy
      */
     public function viewAny(User $user): bool
     {
-        return $user->vendor_id or $user->branch_id;
+        return $user->vendor_id || $user->branch_id;
     }
 
     /**
@@ -20,8 +20,8 @@ class UserPolicy
     public function view(User $user, User $model): bool
     {
         return $user->id === $model->id
-            or $user->vendor_id === $model->vendor_id
-            or $user->vendor_id === $model->branch?->vendor_id;
+            || $user->vendor_id === $model->vendor_id
+            || $user->vendor_id === $model->branch?->vendor_id;
     }
 
     /**
@@ -29,7 +29,7 @@ class UserPolicy
      */
     public function create(User $user): bool
     {
-        return $user->vendor_id;
+        return $user->vendor_id || $user->branch_id;
     }
 
     /**
@@ -37,7 +37,7 @@ class UserPolicy
      */
     public function update(User $user, User $model): bool
     {
-        return $user->id === $model->id or $user->vendor_id === $model->branch?->vendor_id;
+        return $user->id === $model->id || $user->vendor_id === $model->branch?->vendor_id;
     }
 
     /**
@@ -45,7 +45,7 @@ class UserPolicy
      */
     public function delete(User $user, User $model): bool
     {
-        return $user->id === $model->id or $user->vendor_id === $model->branch?->vendor_id;
+        return $user->id === $model->id || $user->vendor_id === $model->branch?->vendor_id;
     }
 
     /**

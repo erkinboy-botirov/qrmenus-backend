@@ -84,6 +84,13 @@ return [
 
     'locale' => 'en',
 
+    'languages' => [
+        'ru' => 'Русский',
+        'uz' => 'O\'zbek',
+        'en' => 'English',
+        'tr' => 'Türk',
+    ],
+
     /*
     |--------------------------------------------------------------------------
     | Application Fallback Locale
@@ -214,4 +221,9 @@ return [
         // 'ExampleClass' => App\Example\ExampleClass::class,
     ])->toArray(),
 
+    'socials' => [
+        'fb' => 'Facebook',
+        'ig' => 'Instagram',
+        'tg' => 'Telegram',
+    ],
 ];
