@@ -20,6 +20,11 @@ class VendorController extends Controller
             Cache::forever("vendor.{$subdomain}", $vendor);
         }
 
+        if ($request->filled('branch') && $vendor->branches?->has($request->branch)) {
+            $vendor->setRelation('branch', $vendor->branches->get($request->branch));
+            $vendor->unsetRelation('branches');
+        }
+
         return response()->json($vendor);
     }
 }
