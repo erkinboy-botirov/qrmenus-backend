@@ -67,22 +67,24 @@ class UserResource extends Resource
             ->columns([
                 TextColumn::make('vendor.name')
                     ->default('-')
-                    ->sortable(),
+                    ->sortable()
+                    ->hidden(auth()->user()->is_not_admin),
                 TextColumn::make('branch.name_ru')
                     ->default('-')
-                    ->sortable(),
+                    ->sortable()
+                    ->hidden(auth()->user()->is_branch_owner),
                 TextColumn::make('name')
                     ->searchable(),
                 TextColumn::make('email')
                     ->searchable(),
                 TextColumn::make('created_at')
                     ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->sortable(),
+                // ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('updated_at')
                     ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->sortable(),
+                // ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 //
